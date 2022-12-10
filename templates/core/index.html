@@ -1,0 +1,26 @@
+<!--inherits the layout-->
+{% extends '_base.html' %}
+<!--passes the page title-->
+{% block title %}{{page_title}}{% endblock title %}
+<!--content starts-->
+{% block content %}
+<section class="section">
+  <div class="container text-center">
+    <h1 class="title has-text-centered" style="background-color: red;color: white;">About US</h1>
+    <br>
+    <h4 style="text-align: justify;">
+      code-switching, process of shifting from one linguistic code (a language or dialect) to another, depending on the social context or conversational setting. Sociolinguists, social psychologists, and identity researchers are interested in the ways in which code-switching, particularly by members of minority ethnic groups, is used to shape and maintain a sense of identity and a sense of belonging to a larger community.<br><br>
+      Broadly, code-switching involves adjusting one’s style of speech, appearance, behavior, and expression in ways that will optimize the comfort of others in exchange for fair treatment, quality service, and employment opportunities.
+    </h4>
+      <!-- {% for record in records %}
+    <div class="level-item has-text-centered">
+      <div>
+        <audio src="{{record.voice_record.url}}" controls></audio>
+        <p>Language: {{record.language}}</p>
+      </div>
+    </div>
+
+    {% endfor %} -->
+  </div>
+</section>
+{% endblock content %}

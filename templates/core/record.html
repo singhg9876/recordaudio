@@ -1,0 +1,152 @@
+<!--inherits the layout-->
+{% extends '_base.html' %}
+{% load static %}
+{% block title %}{{page_title}}{% endblock title %}
+
+<!--additional css-->
+
+{% block css %}
+<link href="{% static 'assets/css/video-js.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/css/all.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/css/videojs.wavesurfer.min.css' %}" rel="stylesheet" />
+<link href="{% static 'assets/css/videojs.record.css' %}" rel="stylesheet" />
+<style>
+  /* change player background color */
+  #recordAudio {
+    background-color: #3e8ed0;
+  }
+</style>
+{% endblock css %}
+<!--content-->
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <div class="column ">
+        <h1 style="text-align: center; font-family: poppins;" class="title">Record audio</h1>
+        <article class="message is-success" id="alert">
+          <div class="message-header">
+            <p>Recorded successfully!</p>
+            <button class="delete" aria-label="delete"></button>
+          </div>
+          <div class="message-body">
+            You have successfully recorded your message. You can now click on
+            the Submit button to post it.
+          </div>
+        </article>
+        <form action="/core/record/" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="field">
+            <div class="control has-icons-left has-icons-right">
+              <div class="row m-auto">
+                <div class="col-lg-4 col-md-6 col-sm-12 m-auto">
+                  <label>Name<sup style="color: red; font-size: 16px;">*</sup>:</label>
+                  <input class="form-control" type="text" placeholder="Name" required name="name" id="name" />
+                </div>
+                <input hidden id="sentence_no" name="sentence_no" value="{{lineNumber}}" disabled>
+                <div class="col-lg-4 col-md-6 col-sm-12 m-auto">
+                  <label>Gender<sup style="color: red; font-size: 16px;">*</sup>:</label>
+                  <select class="form-control" required name="gender" id="gender">
+                    <option selected disabled>Gender</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                  </select>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 m-auto">
+                  <label>Age<sup style="color: red; font-size: 16px;">*</sup>:</label>
+                  <input class="form-control" type="number" placeholder="Age" required name="age" id="age" max="100"
+                    min="10" />
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 m-auto">
+
+                  <label>Native state<sup style="color: red; font-size: 16px;">*</sup>:</label>
+                  <select class="form-control" required name="native_state" id="native_state">
+                    <option selected disabled>State</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                    <option value="Daman and Diu">Daman and Diu</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Lakshadweep">Lakshadweep</option>
+                    <option value="Puducherry">Puducherry</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="West Bengal">West Bengal</option>
+                  </select><br>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 m-auto">
+
+                  <label>Mother Tongue<sup style="color: red; font-size: 16px;">*</sup>:</label>
+                  <input class="form-control" type="text" placeholder="Language" required name="Mother_Tongue"
+                    id="Mother_Tongue" />
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 m-auto">
+
+                  <label>Proficiency in hindi (rate 1 to 5)<sup style="color: red; font-size: 16px;">*</sup>:</label>
+                  <input class="form-control" type="number" max="5" min="1" placeholder="Between 1 - 5 " required
+                    name="Proficiency" id="Proficiency" />
+                  <input hidden type="text" id="sample_text" value="{{para}}">
+                  </div>
+              </div>
+              <p>Instructions:<br>1. Click on the Mic Icon to access your microphone.<br>2. Click on record button to
+                start recording.<br>3. After reading the above paragraph. Click on stop button<br>4. Finally click on
+                submit button.</p>
+              <p style="color: red;">* Before Proceeding to record Please read the text once</p>
+              <p style="border: 1px solid blue; margin: 10px; padding: 5px; font-size: 20px;">{{para}}</p>
+
+            </div>
+            <div class="control has-icons-left has-icons-right" style="margin-top: 1rem">
+              <audio id="recordAudio" class="video-js vjs-default-skin"></audio>
+            </div>
+            <div class="control" style="margin-top: 1rem">
+              <button class="button is-info" id="submit">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+<!--additional js-->
+{% block js %}
+<script src="{% static 'assets/js/video.min.js' %}"></script>
+<script src="{% static 'assets/js/RecordRTC.js' %}"></script>
+<script src="{% static 'assets/js/adapter-latest.js' %}"></script>
+<script src="{% static 'assets/js/wavesurfer.js' %}"></script>
+<script src="{% static 'assets/js/wavesurfer.microphone.min.js' %}"></script>
+<script src="{% static 'assets/js/videojs.wavesurfer.min.js' %}"></script>
+
+<script src="{% static 'assets/js/videojs.record.min.js' %}"></script>
+<script src="{% static 'assets/js/browser-workaround.js' %}"></script>
+<script src="{% static 'assets/js/real.recording.js' %}"></script>
+{% endblock js %}
